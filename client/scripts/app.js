@@ -1,7 +1,10 @@
 // YOUR CODE HERE:
+
 var app = {
   // don't know what this is for  
-  init: function() {},
+  init: function() {
+    $('.submit').submit(app.handleSubmit);  
+  },
 
   send: function(message) {
     $.ajax({
@@ -54,7 +57,7 @@ var app = {
     // </span>
     // <p class='message'>
     // </
-
+    
     var $message = $('<div></div>');
     var $username = $('<p></p>').addClass('username').text(message.username);
     var $txt = $('<p></p>').text(message.text);
@@ -88,13 +91,9 @@ var app = {
   }
   
 };
-var my = function() {
-  console.log('but');
-};
-$('.submit').submit(
-  app.handleSubmit
-  // console.log('yo')
-  );
+
+app.init();
+
 
 
 
