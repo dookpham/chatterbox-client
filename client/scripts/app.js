@@ -39,9 +39,18 @@ var app = {
 
   clearMessages: function() {
     // grab the chats div and remove all children appended to it
-    $('#chats').remove();
-    //append chats back in
-    $('body').append('div').attr('id', 'chats');
+    $('#chats').empty();
+  },
+
+  addMessage: function(message) {
+    var $message = $('<p></p>');
+    $message.text(message);
+    $('#chats').append($message);
+  },
+
+  addRoom: function(room) {
+    var $room = $('<div></div>').addClass(room);
+    $('#roomSelect').append($room);
   }
 };
 
