@@ -43,15 +43,60 @@ var app = {
   },
 
   addMessage: function(message) {
-    var $message = $('<p></p>');
-    $message.text(message);
+
+    // {
+    //   username: 'Mel Brooks',
+    //   text: 'I didn\'t get a harumph outa that guy.!',
+    //   roomname: 'lobby'
+    // }
+
+    // <span class='username'>
+    // </span>
+    // <p class='message'>
+    // </
+
+    var $message = $('<div></div>');
+    var $username = $('<p></p>').addClass('username').text(message.username);
+    var $txt = $('<p></p>').text(message.text);
+
+    $username.click(app.addFriend);
+
+    $message.append($username);
+    $message.append($txt);
+
+    
     $('#chats').append($message);
   },
 
   addRoom: function(room) {
     var $room = $('<div></div>').addClass(room);
     $('#roomSelect').append($room);
+  },
+
+  addFriend: function() {
+
+  },
+
+  handleSubmit: function(event) {
+    // var obj = {
+    //   username: '',
+    //   text: 'Why so many Mel Brooks quotes?',
+    //   roomname: 'unknown'
+    // };
+    // this.addMessage(obj);
+    console.log('heh');
   }
+  
 };
+var my = function() {
+  console.log('but');
+};
+$('.submit').submit(
+  app.handleSubmit
+  // console.log('yo')
+  );
+
+
+
 
 
