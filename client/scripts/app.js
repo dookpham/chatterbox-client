@@ -3,7 +3,7 @@
 var app = {
   // don't know what this is for  
   init: function() {
-    $('.submit').submit(app.handleSubmit);  
+      
   },
 
   send: function(message) {
@@ -31,10 +31,10 @@ var app = {
       // data: JSON.stringify(message),
       // contentType: 'application/json',
       success: function (data) {
-        data.results.forEach(function(val){
+        data.results.forEach(function(val) {
           app.addMessage(val);
         });
-        console.log('chatterbox: Message sent', JSON.stringify(data));
+        console.log('chatterbox: Message sent',data);
       },
       error: function (data) {
         // See: https://developer.mozilla.org/en-US/docs/Web/API/console.error
@@ -80,16 +80,32 @@ var app = {
   },
 
   handleSubmit: function(event) {
+    console.log('butts');
+    console.log($('#message').val());
+    event.preventDefault();
 
+    var currentRoom = currentRoom || 'lobby';
+    var messageObj = {
+      text: $('#message').val(),
+      username: yrName,
+      roomname: currentRoom
+    };
+
+    app.send(messageObj);
+    app.clearMessages();
+    app.fetch();
+    $('#message').val("");
   }
   
 };
-app.init();
+// app.init();
+// $('.submit').click(app.handleSubmit);
+$('form').submit(app.handleSubmit);
 
-setTimeout(function() {
-  app.fetch();
-}, 2000);
+app.fetch();
 
+var yrName = prompt();
+console.log(yrName);
 
 
 
