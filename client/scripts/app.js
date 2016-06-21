@@ -1,7 +1,11 @@
 // YOUR CODE HERE:
 
 var app = {
-  // don't know what this is for  
+
+  currentRoom : 'lobby',
+
+  rooms: {},
+
   init: function() {
       
   },
@@ -23,38 +27,27 @@ var app = {
     });
   },
 
-  rooms: {
-    lobby: 'lobby',
-  },
   
   fetch: function() {
     $.ajax({
     // This is the url you should use to communicate with the parse API server.
       url: 'https://api.parse.com/1/classes/messages',
       type: 'GET',
-      // data: JSON.stringify(message),
-      // contentType: 'application/json',
       success: function (data) {
         data.results.forEach(function(val) {
-          app.addMessage(val);
-          if (val.roomname) {
-            app.rooms[val.roomname] = val.roomname;
+          if (val.roomname === app.currentRoom) {
+            app.addMessage(val);
           }
-        //   $('#mySelect').append($('<option>', { 
-        // value: item.value,
-        // text : item.text 
+          if (val.roomname && app.rooms[val.roomname] === undefined) {
+            app.rooms[val.roomname] = val.roomname;
+            $('select').append($('<option>', {
+              value: val.roomname,
+              text: val.roomname
+            }));
+          }
         });
-        for (var key in app.rooms) {
-          $('select').append($('<option>', {
-            value: key,
-            text: key
-          }));
-        }
-        $( 'select' ).on( 'selectmenuselect', function( event, ui ) {
-          console.log('select:', event, ui);
-
-        } );
-        console.log('chatterbox: Message sent',data);
+        
+        console.log('chatterbox: Message sent', data);
       },
       error: function (data) {
         // See: https://developer.mozilla.org/en-US/docs/Web/API/console.error
@@ -64,7 +57,6 @@ var app = {
   },
 
   clearMessages: function() {
-    // grab the chats div and remove all children appended to it
     $('#chats').empty();
   },
 
@@ -75,8 +67,6 @@ var app = {
 
     message.username = message.username.replace(regex, ' ');
     message.text = message.text.replace(regex, ' ');
-
-    // message.text.replace('<script>', ' ');
 
     var $username = $('<p>' + message.username + '</p>').addClass('username'); 
     var mess = $('<p>' + message.text + '</p>');
@@ -100,32 +90,40 @@ var app = {
   },
 
   handleSubmit: function(event) {
-    console.log('butts');
-    console.log($('#message').val());
+    
     event.preventDefault();
 
-    var currentRoom = currentRoom || 'lobby';
+    var createRoom = $('#roomName').val() || app.currentRoom;
+    
     var messageObj = {
       text: $('#message').val(),
       username: yrName,
-      roomname: currentRoom
+      roomname: createRoom
     };
 
     app.send(messageObj);
     app.clearMessages();
     app.fetch();
     $('#message').val('');
+    $('#roomName').val('');
   }
   
 };
-// app.init();
-// $('.submit').click(app.handleSubmit);
+
 $('form').submit(app.handleSubmit);
 
 app.fetch();
 
 var yrName = prompt();
-console.log(yrName);
+
+$( 'select' ).on( 'change', function( event, ui ) {
+  console.log(event.target.value);
+
+  app.currentRoom = event.target.value;
+  app.clearMessages();
+  app.fetch();
+});
+
 
 
 
