@@ -6,6 +6,8 @@ var app = {
 
   rooms: {},
 
+  friends: {},
+
   init: function() {
       
   },
@@ -71,7 +73,10 @@ var app = {
     var $username = $('<p>' + message.username + '</p>').addClass('username'); 
     var mess = $('<p>' + message.text + '</p>');
     var msgDiv = $('<div></div>');
-
+    if (app.friends[message.username]) {
+      $username.addClass('friend');
+      console.log('Sucess');
+    }
     msgDiv.append($username);
     msgDiv.append(mess);
      
@@ -85,8 +90,10 @@ var app = {
     $('#roomSelect').append($room);
   },
 
-  addFriend: function() {
-    console.log('addFriend');
+  addFriend: function(event) {
+    app.friends[event.target.textContent] = true;
+    // TODO : restyle messages onClick
+    console.log();
   },
 
   handleSubmit: function(event) {
@@ -123,6 +130,7 @@ $( 'select' ).on( 'change', function( event, ui ) {
   app.clearMessages();
   app.fetch();
 });
+
 
 
 
