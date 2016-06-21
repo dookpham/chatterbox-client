@@ -36,7 +36,7 @@ var app = {
       url: 'https://api.parse.com/1/classes/messages',
       type: 'GET',
       success: function (data) {
-        data.results.forEach(function(val) {
+        data.results.forEach(function(val, i) {
           if (val.roomname === app.currentRoom) {
             app.addMessage(val);
           }
@@ -70,9 +70,9 @@ var app = {
     message.username = message.username.replace(regex, ' ');
     message.text = message.text.replace(regex, ' ');
 
-    var $username = $('<p>' + message.username + '</p>').addClass('username'); 
+    var $username = $('<p>' + message.username + '</p>').addClass('username').attr('data-username', message.username);   
     var mess = $('<p>' + message.text + '</p>');
-    var msgDiv = $('<div></div>');
+    var msgDiv = $('<div></div>').addClass('chat');
     if (app.friends[message.username]) {
       $username.addClass('friend');
       console.log('Sucess');
@@ -91,8 +91,12 @@ var app = {
   },
 
   addFriend: function(event) {
-    app.friends[event.target.textContent] = true;
+    var username = event.target.textContent;
+    app.friends[username] = true;
+    
     // TODO : restyle messages onClick
+
+    $('p[data-username="' + username + '"]').addClass('friend');
     console.log();
   },
 
@@ -118,7 +122,7 @@ var app = {
 };
 
 $('form').submit(app.handleSubmit);
-
+// $('#chats')
 app.fetch();
 
 var yrName = prompt();
