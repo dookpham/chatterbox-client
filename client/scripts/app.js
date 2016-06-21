@@ -26,12 +26,15 @@ var app = {
   fetch: function() {
     $.ajax({
     // This is the url you should use to communicate with the parse API server.
-      // url: 'https://api.parse.com/1/classes/messages',
+      url: 'https://api.parse.com/1/classes/messages',
       type: 'GET',
       // data: JSON.stringify(message),
       // contentType: 'application/json',
       success: function (data) {
-        console.log('chatterbox: Message sent');
+        data.results.forEach(function(val){
+          app.addMessage(val);
+        });
+        console.log('chatterbox: Message sent', JSON.stringify(data));
       },
       error: function (data) {
         // See: https://developer.mozilla.org/en-US/docs/Web/API/console.error
@@ -46,29 +49,25 @@ var app = {
   },
 
   addMessage: function(message) {
+    var regex = /[<>{}[\]=()]/gi;
+    message.username = message.username || 'default';
+    message.text = message.text || 'default';
 
-    // {
-    //   username: 'Mel Brooks',
-    //   text: 'I didn\'t get a harumph outa that guy.!',
-    //   roomname: 'lobby'
-    // }
+    message.username = message.username.replace(regex, ' ');
+    message.text = message.text.replace(regex, ' ');
 
-    // <span class='username'>
-    // </span>
-    // <p class='message'>
-    // </
-    
-    var $message = $('<div></div>');
-    var $username = $('<p></p>').addClass('username').text(message.username);
-    var $txt = $('<p></p>').text(message.text);
+    // message.text.replace('<script>', ' ');
+
+    var $username = $('<p>' + message.username + '</p>').addClass('username'); 
+    var mess = $('<p>' + message.text + '</p>');
+    var msgDiv = $('<div></div>');
+
+    msgDiv.append($username);
+    msgDiv.append(mess);
+     
+    $('#chats').append(msgDiv);
 
     $username.click(app.addFriend);
-
-    $message.append($username);
-    $message.append($txt);
-
-    
-    $('#chats').append($message);
   },
 
   addRoom: function(room) {
@@ -77,24 +76,19 @@ var app = {
   },
 
   addFriend: function() {
-
+    console.log('addFriend');
   },
 
   handleSubmit: function(event) {
-    // var obj = {
-    //   username: '',
-    //   text: 'Why so many Mel Brooks quotes?',
-    //   roomname: 'unknown'
-    // };
-    // this.addMessage(obj);
-    console.log('heh');
+
   }
   
 };
-
 app.init();
 
-
+setTimeout(function() {
+  app.fetch();
+}, 2000);
 
 
 
