@@ -23,6 +23,10 @@ var app = {
     });
   },
 
+  rooms: {
+    lobby: 'lobby',
+  },
+  
   fetch: function() {
     $.ajax({
     // This is the url you should use to communicate with the parse API server.
@@ -33,7 +37,23 @@ var app = {
       success: function (data) {
         data.results.forEach(function(val) {
           app.addMessage(val);
+          if (val.roomname) {
+            app.rooms[val.roomname] = val.roomname;
+          }
+        //   $('#mySelect').append($('<option>', { 
+        // value: item.value,
+        // text : item.text 
         });
+        for (var key in app.rooms) {
+          $('select').append($('<option>', {
+            value: key,
+            text: key
+          }));
+        }
+        $( 'select' ).on( 'selectmenuselect', function( event, ui ) {
+          console.log('select:', event, ui);
+
+        } );
         console.log('chatterbox: Message sent',data);
       },
       error: function (data) {
@@ -94,7 +114,7 @@ var app = {
     app.send(messageObj);
     app.clearMessages();
     app.fetch();
-    $('#message').val("");
+    $('#message').val('');
   }
   
 };
